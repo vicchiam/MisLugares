@@ -1,4 +1,4 @@
-package com.example.mislugares;
+package com.example.mislugares.models;
 
 import android.content.Context;
 import android.content.SharedPreferences;

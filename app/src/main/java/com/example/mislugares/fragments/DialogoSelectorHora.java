@@ -1,4 +1,4 @@
-package com.example.mislugares;
+package com.example.mislugares.fragments;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;

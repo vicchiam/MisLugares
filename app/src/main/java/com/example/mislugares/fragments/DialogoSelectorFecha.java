@@ -1,4 +1,4 @@
-package com.example.mislugares;
+package com.example.mislugares.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

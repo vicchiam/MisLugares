@@ -1,7 +1,6 @@
-package com.example.mislugares;
+package com.example.mislugares.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,19 +9,22 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+
+import com.example.mislugares.PermisosUtilidades;
+import com.example.mislugares.R;
+import com.example.mislugares.fragments.SelectorFragment;
+import com.example.mislugares.fragments.VistaLugarFragment;
+import com.example.mislugares.models.Lugares;
+import com.example.mislugares.models.LugaresBD;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
@@ -94,6 +96,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         }
         if (id==R.id.menu_mapa) {
             Intent intent = new Intent(this, MapaActivity.class);
+            startActivity(intent);
+        }
+        if (id == R.id.menu_usuario) {
+            Intent intent = new Intent(this, UsuarioActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

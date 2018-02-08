@@ -1,7 +1,9 @@
-package com.example.mislugares;
+package com.example.mislugares.fragments;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+
+import com.example.mislugares.R;
 
 public class PreferenciasFragment extends PreferenceFragment {
     @Override

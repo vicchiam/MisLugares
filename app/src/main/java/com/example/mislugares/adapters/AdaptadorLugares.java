@@ -1,14 +1,17 @@
-package com.example.mislugares;
+package com.example.mislugares.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.example.mislugares.models.Lugar;
+import com.example.mislugares.models.Lugares;
+import com.example.mislugares.R;
 
 public class AdaptadorLugares extends
         RecyclerView.Adapter<AdaptadorLugares.ViewHolder> {

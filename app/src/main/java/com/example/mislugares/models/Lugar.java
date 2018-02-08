@@ -1,4 +1,4 @@
-package com.example.mislugares;
+package com.example.mislugares.models;
 
 public class Lugar {
     private String nombre;

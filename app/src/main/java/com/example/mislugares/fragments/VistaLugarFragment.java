@@ -1,4 +1,4 @@
-package com.example.mislugares;
+package com.example.mislugares.fragments;
 
 import android.Manifest;
 import android.app.Activity;
@@ -10,13 +10,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -34,6 +32,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.example.mislugares.activities.EdicionLugarActivity;
+import com.example.mislugares.models.Lugar;
+import com.example.mislugares.activities.MainActivity;
+import com.example.mislugares.PermisosUtilidades;
+import com.example.mislugares.R;
 
 import java.io.File;
 import java.io.FileNotFoundException;

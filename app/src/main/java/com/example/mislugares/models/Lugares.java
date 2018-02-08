@@ -1,4 +1,4 @@
-package com.example.mislugares;
+package com.example.mislugares.models;
 
 public interface Lugares {
     final static String TAG = "MisLugares";

@@ -1,4 +1,4 @@
-package com.example.mislugares;
+package com.example.mislugares.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,6 +8,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 
+import com.example.mislugares.R;
+import com.example.mislugares.fragments.SelectorFragment;
+import com.example.mislugares.models.GeoPunto;
+import com.example.mislugares.models.Lugar;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;

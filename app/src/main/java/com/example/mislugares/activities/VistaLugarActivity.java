@@ -1,7 +1,9 @@
-package com.example.mislugares;
+package com.example.mislugares.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import com.example.mislugares.R;
 
 public class VistaLugarActivity extends AppCompatActivity {
     @Override

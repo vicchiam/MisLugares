@@ -1,7 +1,11 @@
-package com.example.mislugares;
+package com.example.mislugares.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+
+import com.example.mislugares.models.Lugar;
+import com.example.mislugares.models.Lugares;
+import com.example.mislugares.models.LugaresBD;
 
 /**
  * Created by Jesús Tomás on 18/04/2017.

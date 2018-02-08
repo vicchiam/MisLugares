@@ -10,30 +10,24 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
-            android:name=".AcercaDeActivity"
+            android:name=".activities.AcercaDeActivity"
             android:label="Acerca de ..."
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".PreferenciasActivity"
+            android:name=".activities.PreferenciasActivity"
             android:label="Preferencias" />
         <activity
-            android:name=".VistaLugarActivity"
+            android:name=".activities.VistaLugarActivity"
             android:label="Vista de un lugar" />
         <activity
-            android:name=".EdicionLugarActivity"
+            android:name=".activities.EdicionLugarActivity"
             android:label="Edición de un lugar" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -46,7 +40,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-        <activity android:name=".MapaActivity"
+        <activity android:name=".activities.MapaActivity"
             android:label="Mapa"
             android:screenOrientation="portrait"/>
         <provider
@@ -58,6 +52,18 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
+
+
+        <!-- Firebase -->
+        <activity android:name=".firebase.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activities.UsuarioActivity" android:label="Información sobre el usuario" />
+
     </application>
 
 </manifest>
