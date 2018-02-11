@@ -42,6 +42,8 @@ import com.example.mislugares.R;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -127,15 +129,15 @@ public class VistaLugarFragment extends Fragment implements TimePickerDialog.OnT
         //lugar = MainActivity.lugares.elemento((int) id);
         //lugar = SelectorFragment.adaptador.lugarPosicion((int) id);
         this.id = id;
-        lugar = SelectorFragment.adaptador.lugarPosicion((int) id);
+        lugar = SelectorFragment.adaptador.getItem((int) id);
         if (lugar != null) {
 
         TextView nombre = (TextView) v.findViewById(R.id.nombre);
         nombre.setText(lugar.getNombre());
         ImageView logo_tipo = (ImageView) v.findViewById(R.id.logo_tipo);
-        logo_tipo.setImageResource(lugar.getTipo().getRecurso());
+        logo_tipo.setImageResource(lugar.getTipoEnum().getRecurso());
         TextView tipo = (TextView) v.findViewById(R.id.tipo);
-        tipo.setText(lugar.getTipo().getTexto());
+        tipo.setText(lugar.getTipoEnum().getTexto());
 
         if (lugar.getDireccion().isEmpty()) {
             v.findViewById(R.id.barra_direccion).setVisibility(View.GONE);
@@ -206,8 +208,7 @@ public class VistaLugarFragment extends Fragment implements TimePickerDialog.OnT
                 lanzarEdicionLugar(id);
                 return true;
             case R.id.accion_borrar:
-                int _id = SelectorFragment.adaptador.idPosicion((int) id);
-                borrarLugar((int) _id);
+                borrarLugar((int) id);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -234,9 +235,8 @@ public class VistaLugarFragment extends Fragment implements TimePickerDialog.OnT
                 .setCancelable(false)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        MainActivity.lugares.borrar(id);
-                        SelectorFragment.adaptador.setCursor(
-                                MainActivity.lugares.extraeCursor());
+                        String _id = SelectorFragment.adaptador.getKey(id);
+                        MainActivity.lugares.borrar(_id);
                         SelectorFragment.adaptador.notifyDataSetChanged();
                         SelectorFragment selectorFragment = (SelectorFragment) getActivity().
                                 getSupportFragmentManager().findFragmentById(R.id.selector_fragment);
@@ -309,6 +309,7 @@ public class VistaLugarFragment extends Fragment implements TimePickerDialog.OnT
         }
     }
 
+    /*
     public static Bitmap reduceBitmap(Context contexto, String uri,
                                       int maxAncho, int maxAlto) {
         try {
@@ -325,6 +326,36 @@ public class VistaLugarFragment extends Fragment implements TimePickerDialog.OnT
         } catch (FileNotFoundException e) {
             Toast.makeText(contexto, "Fichero/recurso no encontrado",
                     Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+            return null;
+        }
+    }
+    */
+
+    public static Bitmap reduceBitmap(Context contexto, String uri, int maxAncho, int maxAlto) {
+        try {
+            InputStream input = null;
+            Uri u = Uri.parse(uri);
+            if (u.getScheme().equals("http") || u.getScheme().equals("https")) {
+                input = new URL(uri).openStream();
+            }
+            else {
+                input = contexto.getContentResolver().openInputStream(u);
+            }
+
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            options.inSampleSize = (int) Math.max( Math.ceil(options.outWidth / maxAncho), Math.ceil(options.outHeight / maxAlto));
+            options.inJustDecodeBounds = false;
+            return BitmapFactory.decodeStream(input, null, options);
+        }
+        catch (FileNotFoundException e) {
+            Toast.makeText(contexto, "Fichero/recurso de imagen no encontrado", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+            return null;
+        }
+        catch (IOException e) {
+            Toast.makeText(contexto, "Error accediendo a imagen", Toast.LENGTH_LONG).show();
             e.printStackTrace();
             return null;
         }
@@ -404,12 +435,19 @@ public class VistaLugarFragment extends Fragment implements TimePickerDialog.OnT
         }
     }
 
+    /*
     void actualizaLugar(){
         int _id = SelectorFragment.adaptador.idPosicion((int) id);
         MainActivity.lugares.actualiza(_id, lugar);
         SelectorFragment.adaptador.setCursor(MainActivity.lugares.extraeCursor());
 //        SelectorFragment.adaptador.notifyItemChanged((int) id);
         SelectorFragment.adaptador.notifyDataSetChanged();
+    }
+    */
+
+    public void actualizaLugar(){
+        String _id = SelectorFragment.adaptador.getKey((int) id);
+        MainActivity.lugares.actualiza(_id, lugar);
     }
 
     public void cambiarHora() {

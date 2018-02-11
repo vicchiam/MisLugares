@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -24,11 +25,14 @@ import com.example.mislugares.R;
 import com.example.mislugares.fragments.SelectorFragment;
 import com.example.mislugares.fragments.VistaLugarFragment;
 import com.example.mislugares.models.Lugares;
+import com.example.mislugares.models.LugaresAsinc;
 import com.example.mislugares.models.LugaresBD;
+import com.example.mislugares.models.LugaresFirebase;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
-    public static LugaresBD lugares;
+    //public static LugaresBD lugares;
+    public static LugaresAsinc lugares;
     private LocationManager manejador;
     private Location mejorLocaliz;
     private static final int SOLICITUD_PERMISO_LOCALIZACION = 0;
@@ -39,7 +43,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        lugares = new LugaresBD(this);
+        //lugares = new LugaresBD(this);
+        lugares = new LugaresFirebase();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fragmentVista = (VistaLugarFragment) getSupportFragmentManager()
@@ -48,7 +53,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                long _id = lugares.nuevo();
+                //long _id = lugares.nuevo();
+                String _id=lugares.nuevo();
                 Intent i = new Intent(MainActivity.this, EdicionLugarActivity.class);
                 i.putExtra("_id", _id);
                 startActivity(i);
@@ -56,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         });
         manejador = (LocationManager) getSystemService(LOCATION_SERVICE);
         ultimaLocalizazion();
+
+        //permite descargar desde el hilo principal
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder() .permitAll().build());
+
     }
 
     @Override
@@ -238,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
         if (requestCode == RESULTADO_PREFERENCIAS) {
-            SelectorFragment.adaptador.setCursor(MainActivity.lugares.extraeCursor());
+            //SelectorFragment.adaptador.setCursor(MainActivity.lugares.extraeCursor());
             SelectorFragment.adaptador.notifyDataSetChanged();
         }
     }

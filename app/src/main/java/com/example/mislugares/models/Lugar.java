@@ -119,12 +119,22 @@ public class Lugar {
         this.valoracion = valoracion;
     }
 
-    public TipoLugar getTipo() {
+    public TipoLugar getTipoEnum() {
         return tipo;
     }
 
-    public void setTipo(TipoLugar tipo) {
+    public void setTipoEnum(TipoLugar tipo) {
         this.tipo = tipo;
+    }
+
+    public String getTipo(){
+        if(tipo==null) return null;
+        else return tipo.name();
+    }
+
+    public void setTipo(String nombre){
+        if(nombre==null) tipo=null;
+        else tipo=TipoLugar.valueOf(nombre);
     }
 
     public Lugar(String nombre, String direccion, double longitud,
@@ -140,4 +150,5 @@ public class Lugar {
         this.comentario = comentario;
         this.valoracion = valoracion;
     }
+
 }

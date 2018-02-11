@@ -12,8 +12,10 @@ import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
+import com.example.mislugares.PermisosUtilidades;
 import com.example.mislugares.R;
 import com.example.mislugares.activities.MainActivity;
+import com.example.mislugares.models.Usuarios;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -34,12 +36,16 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //PermisosUtilidades.obtenerHash(this);
+
         login();
     }
 
     private void login() {
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
         if (usuario != null) {
+            Usuarios.guardarUsuario(usuario);
             usuario.reload();
             Log.e("Usuario", usuario.getEmail()+" "+usuario.getUid()+" - "+usuario.getProviders().get(0));
             if(usuario.getProviders().get(0).equals("password")){
@@ -78,6 +84,15 @@ public class LoginActivity extends AppCompatActivity {
             else if(usuario.getProviders().get(0).equals("google.com")){
                 irActividadPrincipal();
             }
+            else if(usuario.getProviders().get(0).equals("facebook.com")){
+                irActividadPrincipal();
+            }
+            else if(usuario.getProviders().get(0).equals("twitter.com")){
+                irActividadPrincipal();
+            }
+            else if(usuario.getProviders().get(0).equals("phone")){
+                irActividadPrincipal();
+            }
         } else {
             mostrarViewLogin();
         }
@@ -93,10 +108,15 @@ public class LoginActivity extends AppCompatActivity {
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
+                        .setLogo(R.mipmap.ic_launcher)
+                        .setTheme(R.style.FirebaseUITema)
                         .setAvailableProviders(
                                 Arrays.asList(
                                         new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()
+                                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build()
                                 )
                         )
                         .setIsSmartLockEnabled(false)

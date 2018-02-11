@@ -10,7 +10,12 @@ import android.view.ViewGroup;
 
 import com.example.mislugares.activities.MainActivity;
 import com.example.mislugares.R;
-import com.example.mislugares.adapters.AdaptadorLugaresBD;
+import com.example.mislugares.adapters.AdaptadorLugaresFirebase;
+import com.example.mislugares.adapters.AdaptadorLugaresFirebaseUI;
+import com.example.mislugares.models.Lugar;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 /**
  * Created by Jesús Tomás on 19/04/2017.
@@ -18,7 +23,10 @@ import com.example.mislugares.adapters.AdaptadorLugaresBD;
 
 public class SelectorFragment extends Fragment {
     private RecyclerView recyclerView;
-    public static AdaptadorLugaresBD adaptador;
+
+    public static AdaptadorLugaresFirebaseUI adaptador;
+    //public static AdaptadorLugaresFirebase adaptador;
+
     @Override
     public View onCreateView(LayoutInflater inflador, ViewGroup contenedor,
                              Bundle savedInstanceState) {
@@ -27,6 +35,7 @@ public class SelectorFragment extends Fragment {
         recyclerView =(RecyclerView) vista.findViewById(R.id.recycler_view);
         return vista;
     }
+
     @Override
     public void onActivityCreated(Bundle state) {
         super.onActivityCreated(state);
@@ -34,18 +43,42 @@ public class SelectorFragment extends Fragment {
                 new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         layoutManager.setAutoMeasureEnabled(true); //Quitar si da problemas
-        adaptador = new AdaptadorLugaresBD(getContext(),
-                MainActivity.lugares,  MainActivity.lugares.extraeCursor());
+
+        //Firebase adapter
+        Query query = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("lugares")
+                .limitToLast(50);
+        FirebaseRecyclerOptions<Lugar> opciones = new FirebaseRecyclerOptions
+                .Builder<Lugar>()
+                .setQuery(query, Lugar.class).build();
+                adaptador = new AdaptadorLugaresFirebaseUI(opciones);
+                //adaptador = new AdaptadorLugaresFirebase(this.getActivity(),FirebaseDatabase.getInstance().getReference());
+                recyclerView.setAdapter(adaptador);
+        adaptador.startListening();
         adaptador.setOnItemClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 ((MainActivity) getActivity()).muestraLugar(
                         recyclerView.getChildAdapterPosition(v));
-                /*Intent i = new Intent(getContext(), VistaLugarActivity.class);
-                i.putExtra("id", (long)
-                        recyclerView.getChildAdapterPosition(v));
-                startActivity(i);*/
             }
         });
-        recyclerView.setAdapter(adaptador);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //adaptador.startListening(); //Se recomienda ponerlo, pero no se va ha hacer
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        //adaptador.stopListening(); //Se recomienda ponerlo, pero no se va ha hacer
+    }
+
+    @Override public void onDestroy() {
+        super.onDestroy();
+        adaptador.stopListening();
+    }
+
 }

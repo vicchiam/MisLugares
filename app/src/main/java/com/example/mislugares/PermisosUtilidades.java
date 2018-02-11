@@ -1,10 +1,19 @@
 package com.example.mislugares;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
+import android.util.Log;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by Jesús Tomás on 08/08/2017.
@@ -44,6 +53,23 @@ public class PermisosUtilidades {
                     .show();
         } else {
             fragment.requestPermissions(new String[]{permiso}, requestCode);
+        }
+    }
+
+    public static void obtenerHash(Context context){
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo( "com.example.mislugares", PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.e("Mis Lugares", "KeyHash:"+Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            Log.e("ERROR HASH1",e.getMessage());
+        }
+        catch (NoSuchAlgorithmException e) {
+            Log.e("ERROR HASH2",e.getMessage());
         }
     }
 

@@ -55,14 +55,16 @@
 
 
         <!-- Firebase -->
-        <activity android:name=".firebase.LoginActivity">
+        <activity android:name=".firebase.LoginActivity" />
+
+        <activity android:name=".activities.UsuarioActivity" android:label="Información sobre el usuario" />
+
+        <activity android:name=".firebase.CustomLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".activities.UsuarioActivity" android:label="Información sobre el usuario" />
 
     </application>
 

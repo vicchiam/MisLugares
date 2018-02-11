@@ -3,6 +3,10 @@ package com.example.mislugares.models;
 public class GeoPunto {
     private double longitud, latitud;
 
+    public GeoPunto(){
+
+    }
+
     public GeoPunto(double longitud, double latitud) {
         this.longitud = longitud;
         this.latitud = latitud;

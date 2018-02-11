@@ -114,6 +114,17 @@
             android:background="#d0021b"
             android:textColor="#fff"/>
 
+        <Button
+            android:id="@+id/btn_unificar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Unificar con otra cuenta"
+            android:padding="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:background="#0000ff"
+            android:textColor="#fff"/>
+
     </LinearLayout>
 
 </ScrollView>
