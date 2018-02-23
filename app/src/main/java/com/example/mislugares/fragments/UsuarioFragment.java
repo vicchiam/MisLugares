@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.example.mislugares.R;
-import com.example.mislugares.VolleySingleton;
+import com.example.mislugares.utilities.VolleySingleton;
 import com.example.mislugares.firebase.CustomLoginActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;

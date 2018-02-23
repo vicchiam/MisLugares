@@ -36,8 +36,10 @@ import android.widget.Toast;
 import com.example.mislugares.activities.EdicionLugarActivity;
 import com.example.mislugares.models.Lugar;
 import com.example.mislugares.activities.MainActivity;
-import com.example.mislugares.PermisosUtilidades;
+import com.example.mislugares.models.ValoracionesFirestore;
+import com.example.mislugares.utilities.PermisosUtilidades;
 import com.example.mislugares.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,6 +50,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import static com.example.mislugares.fragments.SelectorFragment.getAdaptador;
+import static com.example.mislugares.models.ValoracionesFirestore.guardarValoracion;
+import static com.example.mislugares.models.ValoracionesFirestore.guardarValoracionYRecalcular;
+import static com.example.mislugares.models.ValoracionesFirestore.leerValoracion;
 
 public class VistaLugarFragment extends Fragment implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
     private long id;
@@ -129,60 +136,79 @@ public class VistaLugarFragment extends Fragment implements TimePickerDialog.OnT
         //lugar = MainActivity.lugares.elemento((int) id);
         //lugar = SelectorFragment.adaptador.lugarPosicion((int) id);
         this.id = id;
-        lugar = SelectorFragment.adaptador.getItem((int) id);
+        lugar = getAdaptador().getItem((int) id);
         if (lugar != null) {
 
-        TextView nombre = (TextView) v.findViewById(R.id.nombre);
-        nombre.setText(lugar.getNombre());
-        ImageView logo_tipo = (ImageView) v.findViewById(R.id.logo_tipo);
-        logo_tipo.setImageResource(lugar.getTipoEnum().getRecurso());
-        TextView tipo = (TextView) v.findViewById(R.id.tipo);
-        tipo.setText(lugar.getTipoEnum().getTexto());
+            TextView nombre = (TextView) v.findViewById(R.id.nombre);
+            nombre.setText(lugar.getNombre());
+            ImageView logo_tipo = (ImageView) v.findViewById(R.id.logo_tipo);
+            logo_tipo.setImageResource(lugar.getTipoEnum().getRecurso());
+            TextView tipo = (TextView) v.findViewById(R.id.tipo);
+            tipo.setText(lugar.getTipoEnum().getTexto());
 
-        if (lugar.getDireccion().isEmpty()) {
-            v.findViewById(R.id.barra_direccion).setVisibility(View.GONE);
-        } else {
-            TextView direccion = (TextView) v.findViewById(R.id.direccion);
-            direccion.setText(lugar.getDireccion());
-        }
-        if (lugar.getTelefono() == 0) {
-            v.findViewById(R.id.barra_telefono).setVisibility(View.GONE);
-        } else {
-            TextView telefono = (TextView) v.findViewById(R.id.telefono);
-            telefono.setText(Integer.toString(lugar.getTelefono()));
-        }
-        if (lugar.getUrl().isEmpty()) {
-            v.findViewById(R.id.barra_url).setVisibility(View.GONE);
-        } else {
-            TextView url = (TextView) v.findViewById(R.id.url);
-            url.setText(lugar.getUrl());
-        }
-        if (lugar.getComentario().isEmpty()) {
-            v.findViewById(R.id.barra_comentario).setVisibility(View.GONE);
-        } else {
-            TextView comentario = (TextView) v.findViewById(R.id.comentario);
-            comentario.setText(lugar.getComentario());
-        }
-        TextView fecha = (TextView) v.findViewById(R.id.fecha);
-        fecha.setText(DateFormat.getDateInstance().format(
-                new Date(lugar.getFecha())));
-        TextView hora = (TextView) v.findViewById(R.id.hora);
-        hora.setText(DateFormat.getTimeInstance().format(
-                new Date(lugar.getFecha())));
-        RatingBar valoracion = (RatingBar) v.findViewById(R.id.valoracion);
-        valoracion.setOnRatingBarChangeListener(null);
-        valoracion.setRating(lugar.getValoracion());
-        valoracion.setOnRatingBarChangeListener(
-                new RatingBar.OnRatingBarChangeListener() {
-                    @Override
-                    public void onRatingChanged(RatingBar ratingBar,
-                                                float valor, boolean fromUser) {
-                        lugar.setValoracion(valor);
-                        actualizaLugar();
-                    }
+            if (lugar.getDireccion().isEmpty()) {
+                v.findViewById(R.id.barra_direccion).setVisibility(View.GONE);
+            }
+            else {
+                TextView direccion = (TextView) v.findViewById(R.id.direccion);
+                direccion.setText(lugar.getDireccion());
+            }
+            if (lugar.getTelefono() == 0) {
+                v.findViewById(R.id.barra_telefono).setVisibility(View.GONE);
+            }
+            else {
+                TextView telefono = (TextView) v.findViewById(R.id.telefono);
+                telefono.setText(Integer.toString(lugar.getTelefono()));
+            }
+            if (lugar.getUrl().isEmpty()) {
+                v.findViewById(R.id.barra_url).setVisibility(View.GONE);
+            }
+            else {
+                TextView url = (TextView) v.findViewById(R.id.url);
+                url.setText(lugar.getUrl());
+            }
+            if (lugar.getComentario().isEmpty()) {
+                v.findViewById(R.id.barra_comentario).setVisibility(View.GONE);
+            }
+            else {
+                TextView comentario = (TextView) v.findViewById(R.id.comentario);
+                comentario.setText(lugar.getComentario());
+            }
+            TextView fecha = (TextView) v.findViewById(R.id.fecha);
+            fecha.setText(DateFormat.getDateInstance().format(new Date(lugar.getFecha())));
+            TextView hora = (TextView) v.findViewById(R.id.hora);
+            hora.setText(DateFormat.getTimeInstance().format(new Date(lugar.getFecha())));
+
+            final RatingBar valoracion = (RatingBar) v.findViewById(R.id.valoracion);
+            final TextView alertaValoracion= (TextView) v.findViewById(R.id.alerta_valoracion);
+            final String _id = getAdaptador().getKey((int) id);
+            final String usuario = FirebaseAuth.getInstance().getUid();
+            leerValoracion(_id, usuario, new ValoracionesFirestore.EscuchadorValoracion() {
+
+                        @Override
+                        public void onNoExiste() {
+                            alertaValoracion.setVisibility(View.VISIBLE);
+                            this.onRespuesta(0.0);
+                        }
+
+                        @Override
+                        public void onRespuesta(Double valor) {
+                            valoracion.setOnRatingBarChangeListener(null);
+                            valoracion.setRating(valor.floatValue());
+                            valoracion.setOnRatingBarChangeListener( new RatingBar.OnRatingBarChangeListener() {
+                                @Override public void onRatingChanged(RatingBar ratingBar, float valor, boolean fromUser) {
+                                    alertaValoracion.setVisibility(View.INVISIBLE);
+                                    guardarValoracionYRecalcular(_id, usuario, (float) valor);
+                                }
+                            });
+                        }
+
+                        @Override public void onError(Exception e) {}
                 });
-        ponerFoto((ImageView)v.findViewById(R.id.foto), lugar.getFoto());
-    }
+
+
+            ponerFoto((ImageView)v.findViewById(R.id.foto), lugar.getFoto());
+        }
     }
 
     @Override
@@ -235,7 +261,7 @@ public class VistaLugarFragment extends Fragment implements TimePickerDialog.OnT
                 .setCancelable(false)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        String _id = SelectorFragment.adaptador.getKey(id);
+                        String _id = getAdaptador().getKey(id);
                         MainActivity.lugares.borrar(_id);
                         SelectorFragment.adaptador.notifyDataSetChanged();
                         SelectorFragment selectorFragment = (SelectorFragment) getActivity().
@@ -446,7 +472,7 @@ public class VistaLugarFragment extends Fragment implements TimePickerDialog.OnT
     */
 
     public void actualizaLugar(){
-        String _id = SelectorFragment.adaptador.getKey((int) id);
+        String _id = getAdaptador().getKey((int) id);
         MainActivity.lugares.actualiza(_id, lugar);
     }
 

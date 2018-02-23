@@ -151,7 +151,7 @@ public class CustomLoginActivity extends FragmentActivity implements GoogleApiCl
 
     private void verificaSiUsuarioValidado() {
         if (!unificar && auth.getCurrentUser() != null) {
-            Usuarios.guardarUsuario(auth.getCurrentUser());
+            Usuarios.guardarUsuario(auth.getCurrentUser(), this.getApplicationContext());
             Intent i = new Intent(this, MainActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);

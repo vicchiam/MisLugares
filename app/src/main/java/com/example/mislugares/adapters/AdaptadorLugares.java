@@ -81,6 +81,7 @@ public class AdaptadorLugares extends
         holder.foto.setImageResource(id);
         holder.foto.setScaleType(ImageView.ScaleType.FIT_END);
         holder.valoracion.setRating(lugar.getValoracion());
+
         if (Lugares.posicionActual != null && lugar.getPosicion() != null) {
             int d=(int) Lugares.posicionActual.distancia(lugar.getPosicion());
             if (d < 2000) {

@@ -20,14 +20,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import com.example.mislugares.PermisosUtilidades;
+import com.example.mislugares.models.LugaresFirebase;
+import com.example.mislugares.utilities.PermisosUtilidades;
 import com.example.mislugares.R;
 import com.example.mislugares.fragments.SelectorFragment;
 import com.example.mislugares.fragments.VistaLugarFragment;
+import com.example.mislugares.models.Lugar;
 import com.example.mislugares.models.Lugares;
 import com.example.mislugares.models.LugaresAsinc;
-import com.example.mislugares.models.LugaresBD;
-import com.example.mislugares.models.LugaresFirebase;
+import com.example.mislugares.models.LugaresFirestore;
+import com.example.mislugares.models.LugaresVector;
+import com.example.mislugares.utilities.Preferencias;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
@@ -43,8 +47,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //lugares = new LugaresBD(this);
-        lugares = new LugaresFirebase();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fragmentVista = (VistaLugarFragment) getSupportFragmentManager()
@@ -63,9 +66,27 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         manejador = (LocationManager) getSystemService(LOCATION_SERVICE);
         ultimaLocalizazion();
 
+        Preferencias pref = Preferencias.getInstance();
+        pref.inicializa(this);
+        if (pref.usarFirestore()) {
+            lugares = new LugaresFirestore();
+        }
+        else {
+            lugares = new LugaresFirebase();
+        }
+
         //permite descargar desde el hilo principal
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder() .permitAll().build());
 
+        //cargarDatosFirestore();
+
+    }
+
+    private void cargarDatosFirestore(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        for (Lugar lugar: LugaresVector.ejemploLugares()){
+            db.collection("lugares").add(lugar);
+        }
     }
 
     @Override
@@ -207,7 +228,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     @Override public void onLocationChanged(Location location) {
         Log.d(Lugares.TAG, "Nueva localización: "+location);
         actualizaMejorLocaliz(location);
-        //adaptador.notifyDataSetChanged();
         SelectorFragment.adaptador.notifyDataSetChanged();
     }
 

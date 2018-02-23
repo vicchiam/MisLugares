@@ -2,6 +2,7 @@ package com.example.mislugares.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +22,18 @@ import static com.example.mislugares.adapters.AdaptadorLugares.personalizaVista;
  * Created by vicch on 11/02/2018.
  */
 
-public class AdaptadorLugaresFirebase extends RecyclerView.Adapter<AdaptadorLugares.ViewHolder> implements ChildEventListener {
+public class AdaptadorLugaresFirebase extends RecyclerView.Adapter<AdaptadorLugares.ViewHolder> implements ChildEventListener, AdaptadorLugaresInterface {
 
     private DatabaseReference reference;
-    private ArrayList<String> keys; private ArrayList<DataSnapshot> items;
-    private LayoutInflater inflador; private View.OnClickListener onClickListener;
+    private ArrayList<String> keys;
+    private ArrayList<DataSnapshot> items;
+    private LayoutInflater inflador;
+    private View.OnClickListener onClickListener;
 
     public AdaptadorLugaresFirebase(Context contexto, DatabaseReference ref){
+
+        Log.d("TIPO", "Firebase SDK");
+
         keys = new ArrayList<String>();
         items = new ArrayList<DataSnapshot>();
         reference = ref;

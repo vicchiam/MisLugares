@@ -12,6 +12,8 @@ public class Lugar {
     private float valoracion;
     private TipoLugar tipo;
 
+    private long n_valoraciones;
+
 
     public Lugar(String nombre, String direccion, double longitud,
                  double latitud, int telefono, String url, String comentario,
@@ -24,6 +26,7 @@ public class Lugar {
         this.url = url;
         this.comentario = comentario;
         this.valoracion = valoracion;
+        this.n_valoraciones=0;
     }
     public Lugar() {
         fecha = System.currentTimeMillis();
@@ -137,6 +140,14 @@ public class Lugar {
         else tipo=TipoLugar.valueOf(nombre);
     }
 
+    public long getN_valoraciones() {
+        return n_valoraciones;
+    }
+
+    public void setN_valoraciones(long n_valoraciones) {
+        this.n_valoraciones = n_valoraciones;
+    }
+
     public Lugar(String nombre, String direccion, double longitud,
                  double latitud, TipoLugar tipo, int telefono, String url, String comentario,
                  int valoracion) {
@@ -149,6 +160,7 @@ public class Lugar {
         this.url = url;
         this.comentario = comentario;
         this.valoracion = valoracion;
+        this.n_valoraciones=0;
     }
 
 }

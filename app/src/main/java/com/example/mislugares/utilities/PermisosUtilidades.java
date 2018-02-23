@@ -1,4 +1,4 @@
-package com.example.mislugares;
+package com.example.mislugares.utilities;
 
 import android.app.Activity;
 import android.content.Context;

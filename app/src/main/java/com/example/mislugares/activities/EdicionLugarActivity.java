@@ -35,8 +35,8 @@ public class EdicionLugarActivity extends AppCompatActivity {
         if (_id!=null) {
             lugar = new Lugar();
         } else {
-            lugar = SelectorFragment.adaptador.getItem((int) id);
-            _id= SelectorFragment.adaptador.getKey((int) id);
+            lugar = SelectorFragment.getAdaptador().getItem((int) id);
+            _id= SelectorFragment.getAdaptador().getKey((int) id);
         }
         nombre = (EditText) findViewById(R.id.nombre);
         nombre.setText(lugar.getNombre());

@@ -3,16 +3,11 @@ package com.example.mislugares.firebase;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
-import com.example.mislugares.PermisosUtilidades;
 import com.example.mislugares.R;
 import com.example.mislugares.activities.MainActivity;
 import com.example.mislugares.models.Usuarios;
@@ -45,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     private void login() {
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
         if (usuario != null) {
-            Usuarios.guardarUsuario(usuario);
+            Usuarios.guardarUsuario(usuario, this.getApplicationContext());
             usuario.reload();
             Log.e("Usuario", usuario.getEmail()+" "+usuario.getUid()+" - "+usuario.getProviders().get(0));
             if(usuario.getProviders().get(0).equals("password")){

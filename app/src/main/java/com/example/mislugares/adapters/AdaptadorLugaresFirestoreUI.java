@@ -8,28 +8,21 @@ import android.view.ViewGroup;
 
 import com.example.mislugares.R;
 import com.example.mislugares.models.Lugar;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 /**
- * Created by vicch on 11/02/2018.
+ * Created by vicch on 14/02/2018.
  */
 
-public class AdaptadorLugaresFirebaseUI extends FirebaseRecyclerAdapter<Lugar, AdaptadorLugares.ViewHolder> implements AdaptadorLugaresInterface {
+public class AdaptadorLugaresFirestoreUI extends FirestoreRecyclerAdapter<Lugar, AdaptadorLugares.ViewHolder> implements AdaptadorLugaresInterface {
 
     protected View.OnClickListener onClickListener;
 
-    public AdaptadorLugaresFirebaseUI(@NonNull FirebaseRecyclerOptions<Lugar> opciones){
-        super(opciones);
+    public AdaptadorLugaresFirestoreUI( @NonNull FirestoreRecyclerOptions<Lugar> options) {
+        super(options);
+        Log.d("TIPO", "Firestore UI");
 
-        Log.d("TIPO", "Firebase UI");
-
-    }
-
-    @Override
-    protected void onBindViewHolder(@NonNull AdaptadorLugares.ViewHolder holder, int position, @NonNull Lugar lugar) {
-        AdaptadorLugares.personalizaVista(holder, lugar);
-        holder.itemView.setOnClickListener(onClickListener);
     }
 
     @Override
@@ -37,6 +30,13 @@ public class AdaptadorLugaresFirebaseUI extends FirebaseRecyclerAdapter<Lugar, A
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.elemento_lista, parent, false);
         return new AdaptadorLugares.ViewHolder(view);
+
+    }
+
+    @Override
+    protected void onBindViewHolder(@NonNull AdaptadorLugares .ViewHolder holder, int position, @NonNull Lugar lugar) {
+        AdaptadorLugares.personalizaVista(holder, lugar);
+        holder.itemView.setOnClickListener(onClickListener);
     }
 
     public void setOnItemClickListener(View.OnClickListener onClick) {
@@ -44,7 +44,7 @@ public class AdaptadorLugaresFirebaseUI extends FirebaseRecyclerAdapter<Lugar, A
     }
 
     public String getKey(int pos) {
-        return super.getSnapshots().getSnapshot(pos).getKey();
+        return super.getSnapshots().getSnapshot(pos).getId();
     }
 
 }

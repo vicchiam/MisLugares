@@ -44,12 +44,12 @@ public class MapaActivity extends FragmentActivity
             mapa.getUiSettings().setCompassEnabled(true);
         }
         if (SelectorFragment.adaptador.getItemCount() > 0) {
-            GeoPunto p = SelectorFragment.adaptador.getItem(0).getPosicion();
+            GeoPunto p = SelectorFragment.getAdaptador().getItem(0).getPosicion();
             mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(p.getLatitud(), p.getLongitud()), 12));
         }
         for (int n=0; n<SelectorFragment.adaptador.getItemCount(); n++) {
-            Lugar lugar = SelectorFragment.adaptador.getItem(n);
+            Lugar lugar = SelectorFragment.getAdaptador().getItem(n);
             GeoPunto p = lugar.getPosicion();
             if (p != null && p.getLatitud() != 0) {
                 BitmapDrawable iconoDrawable = (BitmapDrawable) getResources()
@@ -69,7 +69,7 @@ public class MapaActivity extends FragmentActivity
     @Override
     public void onInfoWindowClick(Marker marker) {
         for (int id=0; id<SelectorFragment.adaptador.getItemCount(); id++){
-            if (SelectorFragment.adaptador.getItem(id).getNombre()
+            if (SelectorFragment.getAdaptador().getItem(id).getNombre()
                     .equals(marker.getTitle())){
                 Intent intent = new Intent(this, VistaLugarActivity.class);
                 intent.putExtra("id", (long)id);
