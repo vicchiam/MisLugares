@@ -40,6 +40,7 @@ import com.example.mislugares.models.ValoracionesFirestore;
 import com.example.mislugares.utilities.PermisosUtilidades;
 import com.example.mislugares.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -214,6 +215,13 @@ public class VistaLugarFragment extends Fragment implements TimePickerDialog.OnT
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.vista_lugar, menu);
+        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(!usuario.getUid().equals(lugar.getCreador())){
+            MenuItem item = (MenuItem) menu.findItem(R.id.accion_borrar);
+            item.setEnabled(false);
+        }
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 

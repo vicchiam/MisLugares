@@ -12,6 +12,8 @@ import com.example.mislugares.R;
 import com.example.mislugares.fragments.SelectorFragment;
 import com.example.mislugares.models.Lugar;
 import com.example.mislugares.models.TipoLugar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class EdicionLugarActivity extends AppCompatActivity {
     private long id;
@@ -34,6 +36,8 @@ public class EdicionLugarActivity extends AppCompatActivity {
         _id = extras.getString("_id", null);
         if (_id!=null) {
             lugar = new Lugar();
+            FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+            lugar.setCreador(usuario.getUid());
         } else {
             lugar = SelectorFragment.getAdaptador().getItem((int) id);
             _id= SelectorFragment.getAdaptador().getKey((int) id);
